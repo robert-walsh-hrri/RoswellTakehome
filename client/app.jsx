@@ -8,7 +8,6 @@ class ProductCarousel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        currentImages: [],
         allImages: []
     };
   }
@@ -16,7 +15,6 @@ class ProductCarousel extends React.Component {
   componentDidMount() {
     axios.get('http://localhost:3001/products/').then((results) => {
         this.setState({
-            currentImages: results.data.slice(0, 4),
             allImages: results.data,
         });
     });
@@ -26,6 +24,7 @@ class ProductCarousel extends React.Component {
       const { allImages } = this.state;
       return (
           <div>
+            <h3 style={{textAlign: "center"}}>SHOP BESTSELLERS</h3>
             <Splide
               options={ {
                   type: 'loop',
@@ -33,17 +32,24 @@ class ProductCarousel extends React.Component {
                   perPage: 4,
                   perMove: 1,
                   gap    : '1rem',
-                  pagination: 'false',
-                  updateOnove: 'true',
-                  width: '80%',
-                  height: '20vh'
+                  updateOnMove: 'true',
+                  width: '100%',
+                  height: '30vh'
               } }
               onMoved={ ( splide, newIndex ) => { console.log( 'moved', newIndex ) } }
             >
               { allImages.map((prod) => {
                   return (
                     <SplideSlide key={ prod.id } >
-                      <img src={ prod.images[0].src } alt={ prod.title } width="100px" height="100px" style={{display: "inline-block"}}/>
+                    <img 
+                        src={ prod.images[0].src } 
+                        alt={ prod.title } 
+                        width="100px" 
+                        height="100px" 
+                        style={{display: "inline-block"}}
+                    />
+                    { prod.title }<br></br>
+                    from { prod.variants[0].price }<br></br>
                     </SplideSlide>
                   );
               })}
