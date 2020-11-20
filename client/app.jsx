@@ -1,7 +1,10 @@
 import React from 'react';
 import axios from 'axios';
+import { Splide, SplideSlide } from '@splidejs/react-splide';
 
-class Carousel extends React.Component {
+
+
+class ProductCarousel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -11,7 +14,6 @@ class Carousel extends React.Component {
   }
 
   componentDidMount() {
-    console.log('in component did mount');
     axios.get('http://localhost:3001/products/').then((results) => {
         this.setState({
             currentImages: results.data.slice(0, 4),
@@ -21,10 +23,34 @@ class Carousel extends React.Component {
   }
 
   render() {
+      const { allImages } = this.state;
       return (
-          <h1>App rendering</h1>
+          <div>
+            <Splide
+              options={ {
+                  type: 'loop',
+                  rewind : true,
+                  perPage: 4,
+                  perMove: 1,
+                  gap    : '1rem',
+                  pagination: 'false',
+                  updateOnove: 'true',
+                  width: '80%',
+                  height: '20vh'
+              } }
+              onMoved={ ( splide, newIndex ) => { console.log( 'moved', newIndex ) } }
+            >
+              { allImages.map((prod) => {
+                  return (
+                    <SplideSlide key={ prod.id } >
+                      <img src={ prod.images[0].src } alt={ prod.title } width="100px" height="100px" style={{display: "inline-block"}}/>
+                    </SplideSlide>
+                  );
+              })}
+            </Splide>
+          </div>
       );
   }
 }
 
-export default Carousel;
+export default ProductCarousel;
